@@ -44,24 +44,24 @@ export default class Indexer {
         return docs;
     }
 
-    public async loadDocuments(documentsUrls: string[]): Promise<Document[]> {
+    public async loadDocuments(documentsPaths: string[]): Promise<Document[]> {
 
         const progressBar = new SingleBar({});
 
-        console.log(`Starting document download. ${documentsUrls.length} total documents`);
+        console.log(`Starting document download. ${documentsPaths.length} total documents`);
 
-        progressBar.start(documentsUrls.length, 0);
+        progressBar.start(documentsPaths.length, 0);
 
         const rawDocuments: Document[] = [];
 
         let loadErrors = [];
 
-        for (const url of documentsUrls) {
+        for (const documentPath of documentsPaths) {
             try {
-                const docs = await this.loadDocument(url);
+                const docs = await this.loadDocument(documentPath);
                 rawDocuments.push(...docs);
             } catch (error) {
-                loadErrors.push(url);
+                loadErrors.push(documentPath);
             }
             progressBar.increment();
         }
@@ -117,9 +117,9 @@ export default class Indexer {
     }
 
     public async index() {
-        const docsUrls = await this.crawlDocsPaths();
+        const docsPaths = await this.crawlDocsPaths();
 
-        const docs = await this.loadDocuments(docsUrls);
+        const docs = await this.loadDocuments(docsPaths);
 
         const chunks = await this.chunkDocuments(docs);
 
