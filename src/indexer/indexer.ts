@@ -21,7 +21,7 @@ export default class Indexer {
         dotenv.config();
     }
 
-    public async crawlDocsUrls(): Promise<string[]> {
+    public async crawlDocsPaths(): Promise<string[]> {
 
         const docs: string[] = [];
 
@@ -117,7 +117,7 @@ export default class Indexer {
     }
 
     public async index() {
-        const docsUrls = await this.crawlDocsUrls();
+        const docsUrls = await this.crawlDocsPaths();
 
         const docs = await this.loadDocuments(docsUrls);
 
