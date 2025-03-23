@@ -41,7 +41,7 @@ export default class Indexer {
         await this.recursiveDocFind({directory: process.env['FOLDER_PATH'] as string, foundDocumentsPath: docs, progressBar});
 
         progressBar.stop();
-        return [...docs];
+        return docs;
     }
 
     public async loadDocuments(documentsUrls: string[]): Promise<Document[]> {
