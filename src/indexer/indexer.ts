@@ -13,9 +13,9 @@ import {Pinecone} from "@pinecone-database/pinecone";
 import {PineconeStore} from "@langchain/pinecone";
 
 
-export class Indexer {
+export default class Indexer {
 
-    filesTypes: string[] = ['.docx', '.txt', '.pdf'];
+    filesExtensions: string[] = ['.docx', '.txt', '.pdf'];
 
     constructor() {
         dotenv.config();
@@ -58,7 +58,7 @@ export class Indexer {
 
         for (const url of documentsUrls) {
             try {
-                const docs = await this.simpleFactoryDocumentLoader(url);
+                const docs = await this.loadDocument(url);
                 rawDocuments.push(...docs);
             } catch (error) {
                 loadErrors.push(url);
@@ -90,7 +90,7 @@ export class Indexer {
         return documentChunks;
     }
 
-    public async vectorializeChunks(chunks: Document[]) {
+    public async vectorizeChunks(chunks: Document[]) {
 
         const embeddingLLM = new OpenAIEmbeddings({
             model: 'text-embedding-3-small'
@@ -123,7 +123,7 @@ export class Indexer {
 
         const chunks = await this.chunkDocuments(docs);
 
-        await this.vectorializeChunks(chunks);
+        await this.vectorizeChunks(chunks);
     }
 
     private async recursiveDocFind(config: { directory: string, foundDocumentsPath: string[], progressBar: SingleBar }): Promise<void> {
@@ -139,31 +139,31 @@ export class Indexer {
                     foundDocumentsPath: config.foundDocumentsPath,
                     progressBar: config.progressBar,
                 });
-            } else if (this.filesTypes.includes(path.extname(fullPath))) {
+            } else if (this.filesExtensions.includes(path.extname(fullPath))) {
                 config.progressBar.increment(1);
                 config.foundDocumentsPath.push(fullPath);
             }
         }
     }
 
-    private async simpleFactoryDocumentLoader(url: string): Promise<Document[]> {
+    private async loadDocument(documentPath: string): Promise<Document[]> {
 
-        const fileType = path.extname(url);
+        const fileType = path.extname(documentPath);
 
         let loader: DocumentLoader;
 
         switch (fileType) {
             case '.docx':
-                loader = new DocxLoader(url);
+                loader = new DocxLoader(documentPath);
                 break;
             case '.txt':
-                loader = new TextLoader(url);
+                loader = new TextLoader(documentPath);
                 break;
             case '.pdf':
-                loader = new PDFLoader(url);
+                loader = new PDFLoader(documentPath);
                 break;
             default:
-                loader = new DocxLoader(url);
+                loader = new DocxLoader(documentPath);
         }
 
         return await loader.load();

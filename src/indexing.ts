@@ -1,4 +1,4 @@
-import {Indexer} from "./indexer/indexer";
+import Indexer from "./indexer/indexer";
 
 const indexer = new Indexer();
 
