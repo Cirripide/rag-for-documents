@@ -40,7 +40,7 @@ Once the indexing process is finished it starts communicating
 npm run dev
 ```
 
-For now it is necessary to empty the pinecone index and re-index the files when some changes are made to the documents.
+For now it is necessary to empty the Pinecone index and re-index the files when some changes are made to the documents.
 
 In order not to consume excessive tokens, since the history is used as context, for each context change in the communication, start a new conversation (ctrl + c -> npm run dev)
 
@@ -48,8 +48,6 @@ In order not to consume excessive tokens, since the history is used as context, 
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 
